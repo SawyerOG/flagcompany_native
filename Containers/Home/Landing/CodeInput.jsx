@@ -18,6 +18,7 @@ const CodeInput = ({ code, updateCode, submit, codeError }) => {
                 onSub
                 keyboardType='numeric'
                 maxLength={4}
+                autoFocus
             />
         </View>
     );
