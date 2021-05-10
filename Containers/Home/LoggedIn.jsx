@@ -1,11 +1,29 @@
-import React from 'react';
-import { Text, View } from 'react-native';
+import React, { useContext } from 'react';
+import { Text, Button } from 'react-native';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { AuthContext } from '../../Containers/Auth/auth-context';
+
+import Screen from '../../Components/Screen';
+
+const logOutCache = async () => {
+    await AsyncStorage.removeItem('@creds');
+};
 
 const LoggedIn = () => {
+    const auth = useContext(AuthContext);
+
+    const logOutHandler = () => {
+        auth.logout();
+        logOutCache();
+    };
+
     return (
-        <View>
+        <Screen>
             <Text>We are logged in!</Text>
-        </View>
+            <Button title='Log Out' onPress={logOutHandler} />
+        </Screen>
     );
 };
 
