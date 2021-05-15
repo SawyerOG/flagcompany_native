@@ -10,7 +10,7 @@ export default Screen;
 const s = StyleSheet.create({
     page: {
         flex: 1,
-        paddingTop: 30,
+        paddingTop: 25,
         fontFamily: 'serif',
     },
 });

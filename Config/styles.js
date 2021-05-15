@@ -7,7 +7,7 @@ export const colors = {
     black: '#000',
 };
 
-export const landingText = {
+export const headerText = {
     color: colors.blue,
     fontWeight: 'bold',
     fontSize: 18,
