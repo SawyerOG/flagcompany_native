@@ -3,10 +3,19 @@ import { StyleSheet, View, Dimensions } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 import { colors } from '../../Config/styles';
 
-const SearchBar = ({ search, setSearch }) => {
+const SearchBar = ({ search, setSearch, searchIsActive, toggleSearch }) => {
     return (
         <View style={s.searchCont}>
-            <Searchbar placeholder='Search Locations' onChangeText={setSearch} value={search} style={s.searchBox} />
+            <Searchbar
+                placeholder='Search Locations'
+                onChangeText={setSearch}
+                value={search}
+                style={s.searchBox}
+                icon={searchIsActive ? 'arrow-left' : 'magnify'}
+                autoFocus
+                onFocus={toggleSearch}
+                onIconPress={toggleSearch}
+            />
         </View>
     );
 };
