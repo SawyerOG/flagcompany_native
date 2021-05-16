@@ -3,9 +3,12 @@ import { StyleSheet, Text, View, SafeAreaView, Dimensions, Pressable } from 'rea
 import { FlatList } from 'react-native-gesture-handler';
 import { colors } from '../../Config/styles';
 
-const NamesBox = ({ locations }) => {
+const NamesBox = ({ locations, getLocation }) => {
     const Item = ({ item }) => (
-        <Pressable style={s.item}>
+        <Pressable
+            style={({ pressed }) => (pressed ? [s.item, s.press] : s.item)}
+            onPress={() => getLocation(item.name)}
+        >
             <View style={s.title}>
                 <Text>{item.name}</Text>
                 <Text>{item.owner}</Text>
@@ -29,13 +32,18 @@ export default NamesBox;
 
 const s = StyleSheet.create({
     cont: {
-        maxHeight: 200,
+        minHeight: 150,
+        maxHeight: 350,
         width: Dimensions.get('window').width,
         flex: 1,
         alignItems: 'center',
+        elevation: 10,
+        // position: 'absolute',
+        // top: 75,
+        backgroundColor: colors.white,
     },
     nameArea: {
-        maxHeight: 200,
+        // maxHeight: 250,
         width: Dimensions.get('window').width - 5,
     },
     item: {
@@ -46,6 +54,9 @@ const s = StyleSheet.create({
         flex: 1,
         height: 60,
         marginVertical: 2,
+    },
+    press: {
+        backgroundColor: colors.lightgrey,
     },
     title: {
         flex: 1,
