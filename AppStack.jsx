@@ -35,7 +35,7 @@ export default function App() {
     const content = auth.isAuthed ? (
         <NavigationContainer>
             <Tab.Navigator
-                tabBarOptions={{ activeTintColor: colors.red }}
+                tabBarOptions={{ activeTintColor: colors.red, keyboardHidesTabBar: true }}
                 screenOptions={({ route }) => ({
                     tabBarIcon: ({ focused, color, size }) => {
                         let iconName;
