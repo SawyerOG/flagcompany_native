@@ -14,6 +14,8 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import HomeRoute from './Containers/Landing/HomeRoute';
 import LoggedIn from './Containers/Home/LoggedIn';
 import LocationInfo from './Containers/LocationInfo/LocationInfo';
+import JobTypes from './Containers/JobTypes/JobTypes';
+import Jobs from './Containers/Jobs/Jobs';
 
 const getSavedCreds = async () => {
     const creds = await AsyncStorage.getItem('@creds');
@@ -39,11 +41,20 @@ export default function App() {
                 screenOptions={({ route }) => ({
                     tabBarIcon: ({ focused, color, size }) => {
                         let iconName;
-
-                        if (route.name === 'Home') {
-                            iconName = focused ? 'home' : 'home-outline';
-                        } else if (route.name === 'Location Info') {
-                            iconName = focused ? 'location' : 'location-outline';
+                        switch (route.name) {
+                            case 'Home':
+                                iconName = focused ? 'home' : 'home-outline';
+                                break;
+                            case 'Jobs':
+                                iconName = focused ? 'construct' : 'construct-outline';
+                                break;
+                            case 'Job Types':
+                                iconName = focused ? 'settings' : 'settings-outline';
+                                break;
+                            case 'Location Info':
+                                iconName = focused ? 'location' : 'location-outline';
+                                break;
+                            default:
                         }
 
                         return <Ionicons name={iconName} size={size} color={color} />;
@@ -51,6 +62,8 @@ export default function App() {
                 })}
             >
                 <Tab.Screen name='Home' component={LoggedIn} />
+                <Tab.Screen name='Jobs' component={Jobs} />
+                <Tab.Screen name='Job Types' component={JobTypes} />
                 <Tab.Screen name='Location Info' component={LocationInfo} />
             </Tab.Navigator>
         </NavigationContainer>
