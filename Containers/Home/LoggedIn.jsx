@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Text, Button } from 'react-native';
+import { View, Text, Button } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -22,6 +22,11 @@ const LoggedIn = () => {
     return (
         <Screen>
             <Text>We are logged in!</Text>
+            <View>
+                <Text>Welcome {auth.crewName}</Text>
+                <Text>What is my purpose</Text>
+                <Text>oh my god</Text>
+            </View>
             <Button title='Log Out' onPress={logOutHandler} />
         </Screen>
     );
