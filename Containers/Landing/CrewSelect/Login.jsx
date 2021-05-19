@@ -1,54 +1,18 @@
 import React, { useState, useContext } from 'react';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
-import { IconButton, ActivityIndicator } from 'react-native-paper';
+import { IconButton, ActivityIndicator, TextInput } from 'react-native-paper';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import firebase from 'firebase/app';
-import { db } from '../../../Config/firebase';
 
 import { AuthContext } from '../../Auth/auth-context';
 
 import { headerText } from '../../../Config/styles';
 import Screen from '../../../Components/Screen';
-import CodeInput from './CodeInput';
 import Item from './MemberItem';
-
-const submitAndCreateClockInData = async (selectedMember, clockIn) => {
-    try {
-        let clockInId = '';
-        if (clockIn) {
-            const { id } = await db.collection('crewTimePunches').add({
-                crewID: selectedMember.id,
-                approved: false,
-                timeIn: firebase.firestore.FieldValue.serverTimestamp(),
-            });
-
-            clockInId = id;
-        }
-
-        await AsyncStorage.setItem(
-            '@creds',
-            JSON.stringify({
-                ...selectedMember,
-                isAuthed: true,
-                clockInId: clockInId,
-            })
-        );
-        await AsyncStorage.setItem(
-            '@authStatus',
-            JSON.stringify({
-                isAuthed: true,
-            })
-        );
-    } catch (err) {
-        console.log(err);
-    }
-};
 
 const Login = ({ goBack, members }) => {
     const auth = useContext(AuthContext);
 
-    const [clockIn, setClockIn] = useState(false);
     const [selectedMember, setSelectedMember] = useState({ id: '', name: '', code: '' });
     const [code, setCode] = useState('');
     const [codeError, setCodeError] = useState(false);
@@ -64,8 +28,14 @@ const Login = ({ goBack, members }) => {
             // The user knows the code so lets log in.
             //User is clocking in so create a new doc with the clock in time i guess...
             try {
-                await submitAndCreateClockInData(selectedMember, clockIn);
-                auth.login();
+                await AsyncStorage.setItem(
+                    '@creds',
+                    JSON.stringify({
+                        ...selectedMember,
+                        isAuthed: true,
+                    })
+                );
+                auth.login(selectedMember.name);
             } catch (err) {
                 console.log(err);
             }
@@ -75,10 +45,6 @@ const Login = ({ goBack, members }) => {
             setCodeError(true);
             setCode('');
         }
-    };
-
-    const toggleClockIn = () => {
-        setClockIn((p) => !p);
     };
 
     return (
@@ -107,13 +73,17 @@ const Login = ({ goBack, members }) => {
                         <ActivityIndicator size='large' />
                     </View>
                 )}
-                <CodeInput
-                    code={code}
-                    updateCode={setCode}
-                    submit={submitCodeHandler}
-                    codeError={codeError}
-                    clockIn={clockIn}
-                    toggleClockIn={toggleClockIn}
+                <TextInput
+                    label={codeError ? 'Wrong Code' : 'Code'}
+                    placeholder='Enter Code'
+                    mode='outlined'
+                    error={codeError}
+                    value={code}
+                    onChangeText={setCode}
+                    onBlur={() => submitCodeHandler()}
+                    onSub
+                    keyboardType='numeric'
+                    maxLength={4}
                 />
             </View>
         </Screen>
@@ -132,7 +102,6 @@ const s = StyleSheet.create({
     scroll: {
         flex: 1,
     },
-
     scrollPosition: {
         flexGrow: 1,
         alignItems: 'center',
