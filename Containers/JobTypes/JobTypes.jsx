@@ -1,32 +1,37 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { db } from '../../Config/firebase';
 
 import Screen from '../../Components/Screen';
+import JobList from './jobList';
 
 const JobTypes = () => {
-    const [jobTypes, setJobTypes] = useState([]);
+    const [jobTypes, setJobTypes] = useState({});
 
     useEffect(() => {
-        if (jobTypes.length === 0) {
+        if (Object.keys(jobTypes).length === 0) {
             db.collection('jobTypes')
                 .doc('job')
                 .get()
                 .then((res) => {
                     if (res.exists) {
-                        console.log(res.data().types);
-                        setJobTypes(res.data().types);
+                        const jobObj = {};
+                        res.data().types.forEach((i) =>
+                            jobObj[i.category]
+                                ? jobObj[i.category].push({ jobName: i.jobName, jobID: i.jobID })
+                                : (jobObj[i.category] = [{ jobName: i.jobName, jobID: i.jobID }])
+                        );
+                        console.log(jobObj);
+                        setJobTypes(jobObj);
                     }
                 });
         }
-    }, [jobTypes.length]);
+    }, [jobTypes]);
 
     return (
         <Screen>
-            <View style={s.Container}>
-                <Text>Who am I job types</Text>
-            </View>
+            <View style={s.Container}>{Object.keys(jobTypes).length !== 0 && <JobList jobsObj={jobTypes} />}</View>
         </Screen>
     );
 };
